@@ -6,7 +6,7 @@ Cheapolata was a heap pwn challenge from FCSC 2024, here's a summary:
 - 2 stars
 - 29 solves
 - 429 points
-- Author: idk yet x)
+- Author: Cryptanalyse
 > On vous demande de lire le fichier flag.txt sur le serveur distant.
 
 

@@ -6,7 +6,7 @@ Hashed Shellcode was a shellcoding pwn challenge from FCSC 2024, here's a summar
 - 2 stars
 - 15 solves
 - 464 points
-- Author: idk yet x)
+- Author: Cryptanalyse
 > Vous aviez aimé Encrypted Shellcode du FCSC 2021 ? Devinez quoi ? Voici la version avec du hachage !
 > Note : l'image de base Docker sur le service distant est debian:bookworm-slim.
 
