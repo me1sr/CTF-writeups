@@ -37,7 +37,7 @@ void win() {
 ```
 Il nous suffit de trouver un moyen de l'appeler pour obtenir le flag.
 
-On peut aussi utiliser `checksec` dans *gef* pour obtenir plus d'information sur le binaire:
+On peut aussi utiliser `checksec` dans *gef* pour obtenir plus d'informations sur le binaire:
 ```
 Canary                            : Disabled
 NX                                : Enabled
@@ -104,7 +104,7 @@ void modifier_plainte_par_index(int nombre_plaintes, Plainte plaintes[]) {
     printf("Plainte modifiée avec succès.\n");
 }
 ```
-On voit à la ligne 20 (merci le commentaire 👀) que fgets écrit trop de caractères dans la plainte (0x16). En effet, 0x16 = 24 et si on compare avec la structure d'avant, 24 est plus grand que la taille maximum, 16.
+On voit à la ligne 20 (merci le commentaire 👀) que fgets écrit trop de caractères dans la plainte (0x16). En effet, 0x16 = 24 et si on compare avec la structure d'avant, 24 est plus grand que la taille maximum, qui est 16.
 
 # Exploitation
 
@@ -158,7 +158,7 @@ def exploit():
         print("%#04x %#018x" % (i, u64(leaks[i])))
 
 ```
-Il faut faire attention à ne pas écraser `nombre_plaintes` avec un nombre trop grand, sinon `afficher_toutes_les_plaintes` essayera d'afficher des plaintes au de la stack et le programme crashera, 32 est largement suffisant.
+Il faut faire attention à ne pas écraser `nombre_plaintes` avec un nombre trop grand, sinon `afficher_toutes_les_plaintes` essaiera d'afficher des plaintes au-delà stack et le programme plantera, 32 est largement suffisant.
 On obtient:
 ```py
 0x00 0x0000000000000061
@@ -279,7 +279,7 @@ Mettons un breakpoint sur l'instruction ret de `main_logic`:
     0x55555555522d 55                  <win+0x4>   push   rbp
 	...
 ```
-C'est bizarre, on appelle bel et bien win mais ça crash quand même.
+C'est bizarre, on appelle bel et bien win mais ça plante quand même.
 Si on continue instruction par instruction avec `ni`, on voit que le progamme meurt sur l'appelle de `system("cat /flag.txt")`, sur cette instruction:
 ```x86
 movaps XMMWORD PTR [rsp + 0x50], xmm0
@@ -287,9 +287,9 @@ movaps XMMWORD PTR [rsp + 0x50], xmm0
 Avec quelque recherche, on tombe sur [movaps](https://www.felixcloutier.com/x86/movaps) qui nous explique que:
 > the operand must be aligned on a 16-byte (128-bit version), 32-byte (VEX.256 encoded version) or 64-byte (EVEX.512 encoded version) boundary or a general-protection exception (#GP)
 
-En gros, si la destination (`[rsp + 0x50]`) n'est pas aligné sur 16 bits, les 4 premier bits doivent être 0 (exemple: `0x7fffffffdff0`), alors le programme crash. `[rsp + 0x50]` dépend de la position du stack (`rsp` est le registre qui contient l'adresse de la stack) donc `rsp` doit être aligné sur 16 bits, ce qui n'est pas le cas si on regarde dans gdb.
+En gros, si la destination (`[rsp + 0x50]`) n'est pas alignée sur 16 bits, les 4 premiers bits doivent être 0 (exemple: `0x7fffffffdff0`), alors le programme plante. `[rsp + 0x50]` dépend de la position du stack (`rsp` est le registre qui contient l'adresse de la stack) donc `rsp` doit être aligné sur 16 bits, ce qui n'est pas le cas si on regarde dans gdb.
 
-Pour remédier à ce problème, on peut par exemple sauter sur `win+5`, cela permet de sauter le `push rbp` au début de `win` et donc de garder une adresse de stack aligné pour ne pas faire crash le programme. Sauter le `push rbp` aura des conséquences (crash) à la fin de `win` mais on aura déjà obtenu notre flag donc c'est pas grave.
+Pour remédier à ce problème, on peut par exemple sauter sur `win+5`, cela permet de sauter le `push rbp` au début de `win` et donc de garder une adresse de stack alignée pour ne pas faire planter le programme. Sauter le `push rbp` aura des conséquences (plantage) à la fin de `win` mais on aura déjà obtenu notre flag donc c'est pas grave.
 Ce problème est plutôt connu en pwn, une autre technique est de rajouter un `ret` avant de sauter sur la fonction qu'on veut pour re aligner la stack (un petit ROP) mais dans ce cas il faudrait aussi écrire la plainte 7.
 
 Script final:
