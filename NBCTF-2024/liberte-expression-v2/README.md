@@ -218,6 +218,7 @@ on peut en conclure que cette adresse de retour correspond à celle de la foncti
 
 Si on compte, on voit que l'adresse de retour fait partie de la plainte 6. On peut donc la modifier, remplacer l'adresse de retour par l'adresse de win et quitter le menu.
 Il faut prendre en compte qu'il ne s'agit pas du début de la plainte 6, il faut rajouter 8 caractères avant ceux qui vont remplacer l'adresse de retour dans `modifier_plainte_par_index`.
+
 ![](retaddr_overwrite.png)
 
 Résumé:
