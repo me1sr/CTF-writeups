@@ -186,7 +186,7 @@ On peut reconnaitre plusieurs valeurs dans ce leak:
 - `0x0000555555557d88` à l'index 0xc, cette adresse ressemble à une adresse du binaire.
 
 On peut aller voir dans *gef* pour confirmer, avec la commande `vmmap` qui nous affiche les adresses et à quoi elle font référence,
-ici, `vmmap 0x0000555555557d88` nous montre que cette adresse apparient bel et bien au binaire:
+ici, `vmmap 0x0000555555557d88` nous montre que cette adresse appartient bel et bien au binaire:
 ```py
 Start              End                Size               Offset             Perm Path
 0x0000555555557000 0x0000555555558000 0x0000000000001000 0x0000000000002000 r-- /home/meisr/.../liberte_v2
