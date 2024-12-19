@@ -271,8 +271,7 @@ def launch_remote():
 
 def launch_local():
     global file, io
-    pty = process.PTY
-    io = process([file, *args], stdin=pty, stdout=pty)
+    io = process([file, *args])
     debug()
 
 launch = launch_local

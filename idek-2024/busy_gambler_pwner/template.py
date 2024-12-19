@@ -114,9 +114,7 @@ def main():
         print(win_path, path)
 
         context.log_level = logging.WARNING
-
-        pty = process.PTY
-        # io = process([file, *args], stdin=pty, stdout=pty, stderr=pty)
+        # io = process([file, *args])
         # gdb.attach(io)
         # input("gdb")
 

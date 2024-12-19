@@ -327,8 +327,7 @@ def launch_remote():
 
 def launch_local():
     global file, io
-    pty = process.PTY
-    io = process([file, *exe_args], stdin=pty, stdout=pty, stderr=pty) # stdin=pty to avoid pwntools messing with the file structures and the heap
+    io = process([file, *exe_args])
     if args.GDB:
         debug()
 

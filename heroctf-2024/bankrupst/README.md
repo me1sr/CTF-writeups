@@ -1,0 +1,4 @@
+- Input "AAAAAAAAAAAAAAAAAAAAAA" in the menu
+- Insert the card
+- Check Balance
+- profit
